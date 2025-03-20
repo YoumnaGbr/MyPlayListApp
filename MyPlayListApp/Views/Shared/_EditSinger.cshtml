@@ -1,0 +1,35 @@
+﻿@model MyPlayListApp.Data.ViewModels.SingerDetailes
+
+<div class="modal fade" id="editSingerModal" tabindex="-1" aria-labelledby="editSingerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSingerModalLabel">Edit Singer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Home" asp-action="UpdateSinger" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" required />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="DateOfBirth" class="form-label"></label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" required />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Image" class="form-label"></label>
+                        <input type="file" name="ImageFile" class="form-control" />
+                        <input type="hidden" asp-for="Image" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

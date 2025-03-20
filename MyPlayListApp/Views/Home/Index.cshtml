@@ -1,0 +1,195 @@
+﻿@using MyPlayListApp.Data.Entities
+@using MyPlayListApp.Data.Interfaces
+@model MyPlayListApp.Data.ViewModels.SongViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<br />
+<br />
+
+<div class="search-container d-flex flex-wrap gap-3 align-items-center">
+    <form asp-action="Index" method="get" class="d-flex gap-2 flex-wrap w-100">
+        <div class="form-group col-12 col-md-4">
+            <select class="form-select" name="SingerId" asp-items="@Model.Singers" onchange="this.form.submit()">
+                <option value="@null">All Singers</option>
+            </select>
+        </div>
+        <div class="form-group col-12 col-md-4">
+            <select class="form-select" name="CategoryId" asp-items="@Model.Categories" onchange="this.form.submit()">
+                <option value="@null">All Types</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-auto">
+            <input type="submit" value="Clear Filter" class="btn btn-success w-100 w-md-auto" style="white-space: nowrap;" />
+        </div>
+    </form>
+
+    <div class="col-12 col-md-auto">
+        <button class="btn btn-primary w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#addSongModal" style="white-space: nowrap;">
+            <i class="bi bi-music-note"></i> Add Song
+        </button>
+    </div>
+</div>
+
+
+<br />  
+    @if (Model.SongItemResult.songs.Count() > 0)
+    {
+        <div class="table-responsive d-none d-md-block">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Song Name</th>
+                        <th>Song Type</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var songs in Model.SongItemResult.songs)
+                    {
+                        <tr>
+
+                            <td>
+                                <img src="~/images/@songs.SingerImage" width="75" class="img-fluid rounded-circle">
+                            </td>
+                        <td>
+                            <a href="#" class="singer-details-link"
+                               data-id="@songs.SingerId"
+                               data-bs-toggle="modal"
+                               data-bs-target="#singerDetailsModal">
+                                @songs.SingerName
+                            </a>
+                        </td>
+                            <td>@songs.SongName</td>
+                            <td>@songs.TypeName</td>
+                            <td>
+                            <a class="btn btn-warning edit-song-btn"
+                               data-bs-toggle="modal"
+                               data-bs-target="#editSongModal"
+                               data-id="@songs.Id"
+                               data-name="@songs.SongName"
+                               data-singerid="@songs.SingerId"
+                               data-categoryid="@songs.CategoryId">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            </td>
+                        <td>
+                            <form asp-action="DeleteSong" method="post" style="display:inline;">
+                                <input type="hidden" name="songId" value="@songs.Id" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+ 
+       @*  (Mobile)  *@
+        <div class="d-md-none">
+        @foreach (var songs in Model.SongItemResult.songs)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="~/images/@songs.SingerImage"
+                                 alt="@songs.SingerName"
+                                 class="rounded-circle me-3"
+                                 width="48"
+                                 height="48">
+                            <div>
+                                <h6 class="mb-0">@songs.SingerName</h6>
+                                <small class="text-muted">@songs.SongName</small>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-primary">@songs.TypeName</span>
+                            <div class="btn-group">
+                            <a asp-action="Edit" asp-route-id="@songs.Id" class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            <form asp-action="DeleteSong" method="post">
+                                <input type="hidden" name="songId" value="@songs.Id" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+<!-- Modal for displaying singer details -->
+<div class="modal fade" id="singerDetailsModal" tabindex="-1" aria-labelledby="singerDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="singerDetailsModalLabel">Singer Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- This content will be populated by the partial view dynamically -->
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul class="pagination justify-content-center">
+    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+</ul>
+<partial name="_AddSong" model="new MyPlayListApp.Data.ViewModels.SongDetailes {
+    Singers = Model.Singers,
+    Categories = Model.Categories
+}" />
+
+<partial name="_EditSong" model="new MyPlayListApp.Data.ViewModels.SongDetailes {
+    Singers = Model.Singers,
+    Categories = Model.Categories
+}" />
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#editSongModal').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget);
+            const modal = $(this);
+
+            modal.find('#Id').val(button.data('id'));
+            modal.find('#Name').val(button.data('name'));
+            modal.find('#SingerId').val(button.data('singerid'));
+            modal.find('#CategoryId').val(button.data('categoryid'));
+        });
+
+        $('.singer-details-link').on('click', function (event) {
+            event.preventDefault();
+
+            var singerId = $(this).data('id');
+
+            $.ajax({
+                url: '@Url.Action("GetSingerDetails", "Home")',
+                type: 'GET',
+                data: { id: singerId },
+                success: function (data) {
+                    $('#modalContent').html(data); 
+                },
+                error: function () {
+                    $('#modalContent').html('<p class="text-danger">Failed to load singer details.</p>');
+                }
+            });
+        });
+    });
+</script>
+
+

@@ -1,0 +1,10 @@
+﻿@model MyPlayListApp.Data.ViewModels.SingerDetailes
+@{
+    var model = Model;
+}
+
+<div class="modal-body text-center">
+    <img src="~/images/@Model.Image" class="modal-img rounded-circle mb-4" width="150">
+    <h4>@Model.Name</h4>
+    <p class="text-muted">@Model.DateOfBirth.ToString("d")</p>
+</div>

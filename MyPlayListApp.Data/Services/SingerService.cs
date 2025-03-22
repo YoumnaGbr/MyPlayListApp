@@ -16,12 +16,10 @@ namespace MyPlayListApp.Data.Services
     public class SingerService : ISingerService
     {
         private readonly ISingerRepository _singerRepository;
-        private readonly IMapper _mapper;
 
         public SingerService(ISingerRepository singerRepository, IMapper mapper)
         {
             _singerRepository = singerRepository;
-            _mapper = mapper;
         }
 
         public SingerItemResult GetSingers(SingersFilter filter)
@@ -52,11 +50,10 @@ namespace MyPlayListApp.Data.Services
         public ResultBase UpdateSinger (SingerDetailes singer)
         {
             var result = new ResultBase();
-            var oldSingerImage = _singerRepository.GetById(singer.Id).Image;
-           
-            if(oldSingerImage != singer.Image)
+
+            if(singer.ImageFile != null)
             {
-                if (singer.ImageFile == null || ImageSettings.IsValidImage(singer.ImageFile) == false)
+                if (ImageSettings.IsValidImage(singer.ImageFile) == false)
                 {
                     result.Success = false;
                     result.Message = "Invalid image format. Only PNG and JPG are allowed.";

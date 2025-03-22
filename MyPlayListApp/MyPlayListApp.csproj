@@ -18,8 +18,4 @@
     <ProjectReference Include="..\MyPlayListApp.Data\MyPlayListApp.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\PartialViews\" />
-  </ItemGroup>
-
 </Project>

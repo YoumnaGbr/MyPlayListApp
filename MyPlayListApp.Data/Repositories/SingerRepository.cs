@@ -86,8 +86,12 @@ namespace MyPlayListApp.Data.Repositories
                 }
                 else
                 {
+                    var local = _context.Singers.Local.FirstOrDefault(entry => entry.Id == singer.Id);
+                    if (local != null)
+                    {
+                        _context.Entry(local).State = EntityState.Detached;
+                    }
                     var updatedSinger = Update(singer);
-                    _context.SaveChanges();
                     if (updatedSinger != null)
                     {
                         result.Success = true;

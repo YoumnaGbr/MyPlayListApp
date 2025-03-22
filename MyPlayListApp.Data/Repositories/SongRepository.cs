@@ -71,10 +71,10 @@ namespace MyPlayListApp.Data.Repositories
             return result;
         }
 
-        public SongItemResult GetPlayList(SongsFilter filter) 
+        public SongViewModel GetPlayList(SongsFilter filter) 
         {
 
-            var result = new SongItemResult();
+            var result = new SongViewModel();
             var playlist = _context.Songs.Select(s => new
             {
                 SongId = s.Id,
@@ -95,29 +95,37 @@ namespace MyPlayListApp.Data.Repositories
 
             playlist = playlist.OrderBy(s => s.SongName);
 
+
+            var totalCount = playlist.Count(); 
+            var totalPages = (int)Math.Ceiling((double)totalCount / filter.PageSize);
+
             if (filter.PageIndex >= 0 && filter.PageSize > 0)
             {
-                playlist = playlist.Skip(filter.PageIndex * filter.PageSize).Take(filter.PageSize);
+                playlist = playlist.Skip((filter.PageIndex - 1) * filter.PageSize).Take(filter.PageSize);
             }
 
+                var songs = playlist
+                .Select(s => new SongDTO()
+                {
+                    Id = s.SongId,
+                    SongName = s.SongName,
+                    TypeName = s.categories.Name,
+                    SingerName = s.singers.Name,
+                    SingerDateOfBirth = s.singers.DateOfBirth,
+                    SingerId = s.singers.Id,
+                    CategoryId = s.categories.Id,
+                    SingerImage = s.singers.Image
+                }).ToList();
 
-            result.TotalCount = playlist.Count();
-
-            result.TotalPages = (int)Math.Ceiling((double)result.TotalCount / (double)filter.PageSize);
-
-            result.songs = playlist.Select(s => new SongDTO()
+            result = new SongViewModel
             {
-               Id = s.SongId,
-               SongName = s.SongName,
-               TypeName = s.categories.Name,
-               SingerName = s.singers.Name,
-               SingerDateOfBirth = s.singers.DateOfBirth,
-               SingerId = s.singers.Id,
-               CategoryId = s.categories.Id,
-               SingerImage = s.singers.Image
-            }).ToList();
-
-            return result;  
+                songs = songs,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                PageIndex = filter.PageIndex,
+                PageSize = filter.PageSize
+            };
+            return result;
         }
 
         public bool IsSongExists(Guid songId)
@@ -140,7 +148,6 @@ namespace MyPlayListApp.Data.Repositories
                 else
                 {
                     var updatedSong = Update(song);
-                    _context.SaveChanges();
                     if (updatedSong != null)
                     {
                         result.Success = true;

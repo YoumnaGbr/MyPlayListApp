@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 using MyPlayListApp.Data.Context;
 using MyPlayListApp.Data.Entities;
 using MyPlayListApp.Data.FilterModels;
@@ -111,6 +112,7 @@ namespace MyPlayListApp.Data.Repositories
             var result = new ResultBase();
             try
             {
+               
                 var isExists = IsCategoryExists(category.Id);
                 if (!isExists)
                 {
@@ -120,7 +122,6 @@ namespace MyPlayListApp.Data.Repositories
                 else
                 {
                     var updatedCategory = Update(category);
-                    _context.SaveChanges();
                     if (updatedCategory != null)
                     {
                         result.Success = true;

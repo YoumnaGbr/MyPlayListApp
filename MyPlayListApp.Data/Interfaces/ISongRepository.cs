@@ -11,7 +11,7 @@ namespace MyPlayListApp.Data.Interfaces
 {
     public interface ISongRepository : IRepository<Song>
     {
-        SongItemResult GetPlayList(SongsFilter filter);
+        SongViewModel GetPlayList(SongsFilter filter);
         ResultBase AddNewSong(Song song);
         ResultBase UpdateSong(Song song);
         ResultBase DeleteSong(Guid songId);

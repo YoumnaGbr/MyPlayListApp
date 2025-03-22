@@ -58,7 +58,10 @@ namespace MyPlayListApp.Data.Repositories
 
         public T Update(T entity)
         {
-            _context.Update(entity);
+            entity = _dbSet.Attach(entity).Entity;
+            var entry = _context.Entry(entity);
+            entry.State = EntityState.Modified;
+            _context.SaveChanges();
             return entity;
         }
         public T GetById(Guid id)

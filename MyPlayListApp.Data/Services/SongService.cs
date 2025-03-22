@@ -21,11 +21,8 @@ namespace MyPlayListApp.Data.Services
         {
             _songRepository = songRepository;
         }
-        public List<Song> GetSongs()
-        {
-           return _songRepository.GetAll(s => s.Id != null).ToList();
-        }
-        public SongItemResult GetPlayList(SongsFilter filter)
+      
+        public SongViewModel GetPlayList(SongsFilter filter)
         {
             return _songRepository.GetPlayList(filter);
         }
@@ -44,8 +41,6 @@ namespace MyPlayListApp.Data.Services
             return result;
 
         }
-
-
         public ResultBase UpdateSong(SongDetailes song)
         {
             var result = new ResultBase();
@@ -59,7 +54,6 @@ namespace MyPlayListApp.Data.Services
             result = _songRepository.UpdateSong(updatedSong);
             return result;
         }
-
         public ResultBase DeleteSong(Guid songId)
         {
             return _songRepository.DeleteSong(songId);

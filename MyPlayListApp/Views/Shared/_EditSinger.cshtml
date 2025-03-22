@@ -8,28 +8,62 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form asp-controller="Home" asp-action="UpdateSinger" method="post" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Id" id="Id"/>
 
-                    <div class="form-group mb-3">
-                        <label asp-for="Name" class="form-label"></label>
-                        <input asp-for="Name" class="form-control" required />
-                    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" id="Name" required />
+                </div>
 
-                    <div class="form-group mb-3">
-                        <label asp-for="DateOfBirth" class="form-label"></label>
-                        <input asp-for="DateOfBirth" type="date" class="form-control" required />
-                    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <strong>(Must Be Older Than 3 Years)</strong>
+                    <input asp-for="DateOfBirth" type="date" class="form-control" id="DateOfBirth" required max="@DateTime.Now.AddYears(-3).ToString("yyyy-MM-dd")" />
+                </div>
 
-                    <div class="form-group mb-3">
-                        <label asp-for="Image" class="form-label"></label>
-                        <input type="file" name="ImageFile" class="form-control" />
-                        <input type="hidden" asp-for="Image" />
-                    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Image" class="form-label"></label>
+                    <input type="file" name="ImageFile" class="form-control" id="ImageFile"/>
+                    <input type="hidden" asp-for="Image" id="Image" />
+                </div>
 
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </form>
+                <button type="button" onclick="UpdateSinger()" class="btn btn-primary">Update</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function UpdateSinger() {
+    const modal = $('#editSingerModal');
+
+    let formData = new FormData();
+
+    formData.append("Id", modal.find("#Id").val());
+    formData.append("Name", modal.find("#Name").val());
+    formData.append("DateOfBirth", modal.find("#DateOfBirth").val());
+    const file = modal.find("#ImageFile")[0];
+    if (file.files.length > 0) {
+        formData.append("ImageFile", file.files[0]);
+    }
+    formData.append("Image", modal.find("#Image").val());
+
+
+        console.log(formData);
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: '@Url.Action("UpdateSinger", "Home")',
+            data: formData,
+            processData: false, 
+            contentType: false, 
+            success: function (e) {
+                alert(e.message);
+                window.location.reload();
+            },
+            error: function (e) {
+                alert(e.message);
+            }
+        });
+    }
+</script>

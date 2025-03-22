@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Graph;
 using Microsoft.Graph.Ediscovery;
+using MyPlayListApp.Data.Entities;
 using MyPlayListApp.Data.FilterModels;
 using MyPlayListApp.Data.Helpers;
 using MyPlayListApp.Data.Interfaces;
@@ -44,27 +46,30 @@ namespace MyPlayListApp.Controllers
         }
         public IActionResult Index(SongsFilter filter)
         {
-            filter.PageIndex = 0;
-            filter.PageSize = 10;
+            if (filter.PageIndex < 1)
+            {
+                filter.PageIndex = 1;
+            }
+            if (filter.PageSize < 1)
+            {
+                filter.PageSize = 10;
+            }
             var result = _songService.GetPlayList(filter);
             var singers = _singerService.GetSingerList();
             var categories = _categoryService.GetCategoriesList();
 
-            // Create the ViewModel for the Index view
             var model = new SongViewModel
             {
                 Filter = filter, 
-                SongItemResult = result,
+                songs = result.songs,
+                PageIndex = result.PageIndex,
+                TotalPages = result.TotalPages,
+                TotalCount = result.TotalCount,
                 Singers = new SelectList(singers, "Id", "Name"),
                 Categories = new SelectList(categories, "Id", "Name"),
             };
 
             return View(model);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
         public IActionResult GetCategories(CategoriesFilter filter)
         {
@@ -77,13 +82,8 @@ namespace MyPlayListApp.Controllers
         [HttpPost]
         public IActionResult AddNewCategory(CategoryDetailes categoryDetailes)
         {
-            if (categoryDetailes != null)
-            {
-                _categoryService.AddNewCategory(categoryDetailes);
-                return RedirectToAction("GetCategories");
-            }
-            return RedirectToAction("GetCategories");
-
+            var result = _categoryService.AddNewCategory(categoryDetailes);
+            return Json(result);
         }
         public IActionResult GetSingers(SingersFilter filter)
         {
@@ -93,60 +93,41 @@ namespace MyPlayListApp.Controllers
 
             return View("Singer", singerDetails.Singers);
         }
-
-
-       
+        
         [HttpPost]
         public IActionResult AddSong(SongDetailes songDetailes)
         {
-            if (songDetailes != null)
-            {
-                _songService.AddNewSong(songDetailes);
-                return RedirectToAction("Index");
-            }
-            return RedirectToAction("Index");
+            var result = _songService.AddNewSong(songDetailes);
+            return Json(result);
         }
 
         [HttpPost]
         public IActionResult UpdateSong(SongDetailes songDetailes)
         {
-            if (songDetailes != null)
+            var result = new ResultBase();
+            if (string.IsNullOrWhiteSpace(songDetailes.Name))
             {
-               var result =  _songService.UpdateSong(songDetailes);
-                return RedirectToAction("Index");
+                result.Success = false;
+                result.Message = "Song Name Cannot Be Empty";
+                return Json(result);
             }
-            return RedirectToAction("Index");
+            
+            result = _songService.UpdateSong(songDetailes);
+            return Json(result);
         }
 
         [HttpPost]
         public IActionResult AddNewSinger(SingerDetailes singerDetails)
         {
-            if (singerDetails != null)
-            {
-                _singerService.AddNewSinger(singerDetails);
-                return RedirectToAction("GetSingers");
-            }
-            return RedirectToAction("GetSingers");
+            var result = _singerService.AddNewSinger(singerDetails);
+            return Json(result);
         }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-      
 
         [HttpPost]
         public IActionResult DeleteSong(Guid songId) 
         {
-            if (songId != null && songId != Guid.Empty)
-            {
-                _songService.DeleteSong(songId);
-                return RedirectToAction("Index");
-            }
-            return RedirectToAction("Index");
+            var result = _songService.DeleteSong(songId);
+            return Json(result);
         }
 
         [HttpPost]
@@ -162,24 +143,30 @@ namespace MyPlayListApp.Controllers
             return Json(result);
         }
         [HttpPost]
-        public IActionResult UpdateCategory(CategoryDetailes categoryDetailes)
+        public IActionResult UpdateCategory([FromBody] CategoryDetailes categoryDetailes)
         {
-            if (categoryDetailes != null)
+            var result = new ResultBase();
+            if (string.IsNullOrWhiteSpace(categoryDetailes.CategoryName))
             {
-                _categoryService.UpdateCategory(categoryDetailes);
-                return RedirectToAction("GetCategories");
+                result.Success = false;
+                result.Message = "Category Name Cannot Be Empty";
+                return Json(result);
             }
-            return RedirectToAction("GetCategories");
+            result = _categoryService.UpdateCategory(categoryDetailes);
+            return Json(result);
         }
 
         public IActionResult UpdateSinger(SingerDetailes singerDetails)
         {
-            if (singerDetails != null)
+            var result = new ResultBase();
+            if (string.IsNullOrWhiteSpace(singerDetails.Name))
             {
-                _singerService.UpdateSinger(singerDetails);
-                return RedirectToAction("GetSingers");
+                result.Success = false;
+                result.Message = "Name Cannot Br Empty";
+                return Json(result);
             }
-            return RedirectToAction("GetSingers");
+            result = _singerService.UpdateSinger(singerDetails);
+            return Json(result);
         }
     }
 }

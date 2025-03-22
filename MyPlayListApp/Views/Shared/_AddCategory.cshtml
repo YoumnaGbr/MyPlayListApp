@@ -8,15 +8,33 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form asp-controller="Home" asp-action="AddNewCategory" enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="col-form-label">Name</label>
-                        <input name="CategoryName" class="form-control" required />
+                        <input id="CategoryName" class="form-control" required />
                     </div>
                     <br />
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </form>
+                    <button type="button" onclick="AddCategory()" class="btn btn-primary">Add</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function AddCategory() {
+        const categoryName = $("#CategoryName").val();
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: '@Url.Action("AddNewCategory", "Home")',
+            data:  { CategoryName: categoryName },
+            success: function (e) {
+                alert(e.message);
+                window.location.reload();
+            },
+            error: function (e) {
+                alert(e.message);
+            }
+        });
+    }
+</script>

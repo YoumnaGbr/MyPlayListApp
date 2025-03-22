@@ -8,16 +8,40 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form asp-controller="Home" asp-action="UpdateCategory" method="post">
-                    <input type="hidden" asp-for="CategoryId" />
+                    <input type="hidden" asp-for="CategoryId" id="CategoryId" />
                     <div class="form-group">
                         <label class="col-form-label">Name</label>
-                        <input asp-for="CategoryName" class="form-control" required />
+                        <input class="form-control" id="CategoryName" name="CategoryName" asp-for="CategoryName" required />
                     </div>
                     <br />
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </form>
+                    <button type="button" onclick="UpdateCategory()" class="btn btn-primary">Update</button>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+    function UpdateCategory() {
+    const modal = $('#editCategoryModal');
+    let formData = {
+         CategoryId: modal.find("#CategoryId").val(),
+         CategoryName:  modal.find("#CategoryName").val()
+    };
+
+        console.log(formData);
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: '@Url.Action("UpdateCategory", "Home")',
+            data: JSON.stringify(formData),
+           success: function (e) {
+                alert(e.message);
+                window.location.reload();
+            },
+            error: function (e) {
+                alert(e.message);
+            }
+        });
+    }
+</script>

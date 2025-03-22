@@ -12,8 +12,7 @@ namespace MyPlayListApp.Data.Interfaces
 {
     public interface ISongService
     {
-        List<Song> GetSongs();
-        SongItemResult GetPlayList(SongsFilter filter);
+        SongViewModel GetPlayList(SongsFilter filter);
         ResultBase AddNewSong(SongDetailes song);
         ResultBase UpdateSong(SongDetailes song);
         ResultBase DeleteSong(Guid songId);

@@ -52,7 +52,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#editCategoryModal"
                             data-id="@category.CategoryId"
-                            data-name="@category.CategoryName">
+                            data-name="@System.Text.Encodings.Web.HtmlEncoder.Default.Encode(category.CategoryName)">
                         <i class="bi bi-pencil"></i>
                     </button>
                     <button class="btn btn-danger btn-sm" onclick="deleteCategory('@category.CategoryId')">
@@ -68,8 +68,21 @@
 <partial name="_EditCategory" model="new MyPlayListApp.Data.ViewModels.CategoryDetailes()" />
 
 <script>
-    function deleteCategory(categoryId) {
-          if (confirm("Are you sure you want to delete this category?")){
+    document.addEventListener('DOMContentLoaded', function() {
+        $('#editCategoryModal').on('show.bs.modal', function(event) {
+            const button = $(event.relatedTarget);
+            const categoryId = button.data('id');
+            const categoryName = button.data('name');
+            const modal = $(this);
+            modal.find('#CategoryId').val(categoryId);
+            modal.find('#CategoryName').val(categoryName);
+        });
+    });
+
+    function deleteCategory(categoryId) 
+    {
+        if (confirm("Are you sure you want to delete this category?"))
+        {
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -85,17 +98,4 @@
              });
           }
     }
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        $('#editCategoryModal').on('show.bs.modal', function(event) {
-            const button = $(event.relatedTarget);
-            const categoryId = button.data('id');
-            const categoryName = button.data('name');
-
-            const modal = $(this);
-            modal.find('#CategoryId').val(categoryId);
-            modal.find('#CategoryName').val(categoryName);
-        });
-    });
 </script>

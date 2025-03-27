@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using MyPlayListApp.Data.Entities;
 using MyPlayListApp.Data.FilterModels;
 using MyPlayListApp.Data.Interfaces;
@@ -31,7 +32,23 @@ namespace MyPlayListApp.Data.Services
 
         public ResultBase DeleteCategory(Guid categoryId)
         {
-            return _categoryRepository.DeleteCategory(categoryId);
+            var result = new ResultBase();
+            var isExists = _categoryRepository.IsCategoryExists(categoryId);
+            var hasSongs = _categoryRepository.HasSongs(categoryId);
+            if (!isExists)
+            {
+                result.Success = false;
+                result.Message = "Category Not Found.";
+                return result;
+            }
+            if (hasSongs)
+            {
+                result.Success = false;
+                result.Message = "Cannot Delele Category Has Songs";
+                return result;
+            }
+            result = _categoryRepository.DeleteCategory(categoryId);
+            return result;
         }
 
         public CategoryItemResult GetCategories(CategoriesFilter filter)
@@ -41,12 +58,22 @@ namespace MyPlayListApp.Data.Services
 
         public ResultBase UpdateCategory(CategoryDetailes category)
         {
+            var result = new ResultBase();
+
+            var isExists = _categoryRepository.IsCategoryExists(category.CategoryId);
+            if (!isExists)
+            {
+                result.Success = false;
+                result.Message = "Category Not Found.";
+                return result;
+            }
             var updatedCategory = new Category
             {
                 Id = category.CategoryId,
                 Name = category.CategoryName
             };
-            return _categoryRepository.UpdateCategory(updatedCategory);
+            result = _categoryRepository.UpdateCategory(updatedCategory);
+            return result;
         }
         public List<Category> GetCategoriesList()
         {

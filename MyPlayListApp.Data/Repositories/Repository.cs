@@ -27,36 +27,30 @@ namespace MyPlayListApp.Data.Repositories
             return entity;
         }
 
-        public void Delete(object id)
+        public bool Delete(object id)
         {
             var entity = _dbSet.Find(id);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
                 _context.SaveChanges();
+                return true;
             }
+            return false;
         }
 
-        public void Delete(Expression<Func<T, bool>> predicate)
+        public bool Delete(Expression<Func<T, bool>> predicate)
         {
             T entityToDelete = _dbSet.FirstOrDefault(predicate);
             if (entityToDelete != null)
             {
                 Delete(entityToDelete);
+                return true;
             }
+            return false;
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
-        {
-            IQueryable<T> query = _dbSet.Where(predicate);
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
-            return query.ToList();
-        }
-
-        public T Update(T entity)
+        public virtual T Update(T entity)
         {
             entity = _dbSet.Attach(entity).Entity;
             var entry = _context.Entry(entity);
@@ -71,6 +65,10 @@ namespace MyPlayListApp.Data.Repositories
         public List<T> GetAll()
         {
             return _context.Set<T>().AsNoTracking().ToList();
+        }
+        public virtual bool Any(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.Any(predicate);
         }
     }
 }

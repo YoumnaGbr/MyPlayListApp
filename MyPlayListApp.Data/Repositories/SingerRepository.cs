@@ -58,7 +58,6 @@ namespace MyPlayListApp.Data.Repositories
             try
             {
                 var addedsinger = Add(singer);
-                _context.SaveChanges();
                 if (addedsinger != null) 
                 {
                     result.Success = true;
@@ -78,27 +77,12 @@ namespace MyPlayListApp.Data.Repositories
             var result = new ResultBase();
             try
             {
-                var isExists = IsSingerExists(singer.Id);
-                if (!isExists) 
+                var updatedSinger = Update(singer);
+                if (updatedSinger != null)
                 {
-                    result.Success = false;
-                    result.Message = "Singer Not Found.";
+                    result.Success = true;
+                    result.Message = "Singer Updated Successfully.";
                 }
-                else
-                {
-                    var local = _context.Singers.Local.FirstOrDefault(entry => entry.Id == singer.Id);
-                    if (local != null)
-                    {
-                        _context.Entry(local).State = EntityState.Detached;
-                    }
-                    var updatedSinger = Update(singer);
-                    if (updatedSinger != null)
-                    {
-                        result.Success = true;
-                        result.Message = "Singer Updated Successfully.";
-                    }
-                }
-
             }
             catch (Exception ex)
             {
@@ -113,21 +97,9 @@ namespace MyPlayListApp.Data.Repositories
             var result = new ResultBase();
             try
             {
-                var isExists = IsSingerExists(singerId);
-                if (!isExists)
+                var isDeleted = Delete(singerId);
+                if (isDeleted)
                 {
-                    result.Success = false;
-                    result.Message = "Singer Not Found.";
-                }
-                if (HasSongs(singerId))
-                {
-                    result.Success = false;
-                    result.Message = "Cannot Delele Singer Has Songs";
-                }
-                else
-                {
-                    Delete(singerId);
-                    _context.SaveChanges();
                     result.Success = true;
                     result.Message = "Singer Deleted Successfully.";
                 }
@@ -142,13 +114,12 @@ namespace MyPlayListApp.Data.Repositories
 
         public bool IsSingerExists(Guid singerId) 
         {
-            var isExists = _context.Singers.Any(s => s.Id == singerId);
+            var isExists = Any(s => s.Id == singerId);
             return isExists;
         }
         public bool HasSongs (Guid singerId)
         {
-            var hasSongs = _context.Singers.Where(s => s.Id == singerId)
-                                           .Any(s => s.Songs.Any(m => m.SingerId == singerId));
+            var hasSongs =  Any(s => s.Id == singerId && s.Songs.Any(m => m.SingerId == singerId));
             return hasSongs;
         }
     }

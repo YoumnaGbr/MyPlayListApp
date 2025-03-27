@@ -50,8 +50,14 @@ namespace MyPlayListApp.Data.Services
         public ResultBase UpdateSinger (SingerDetailes singer)
         {
             var result = new ResultBase();
-
-            if(singer.ImageFile != null)
+            var isExists = _singerRepository.IsSingerExists(singer.Id);
+            if (!isExists)
+            {
+                result.Success = false;
+                result.Message = "Singer Not Found.";
+                return result;
+            }
+            if (singer.ImageFile != null)
             {
                 if (ImageSettings.IsValidImage(singer.ImageFile) == false)
                 {
@@ -76,8 +82,23 @@ namespace MyPlayListApp.Data.Services
         }
         public ResultBase DeleteSinger(Guid singerId)
         {
+            var result = new ResultBase();
             var singerImage = _singerRepository.GetById(singerId).Image;
-            var result = _singerRepository.DeleteSinger(singerId);
+            var isExists = _singerRepository.IsSingerExists(singerId);
+            var hasSongs = _singerRepository.HasSongs(singerId);
+            if (!isExists)
+            {
+                result.Success = false;
+                result.Message = "Singer Not Found.";
+                return result;
+            }
+            if (hasSongs)
+            {
+                result.Success = false;
+                result.Message = "Cannot Delele Singer Has Songs";
+                return result;
+            }
+            result = _singerRepository.DeleteSinger(singerId);
             if (result.Success) 
             {
                 ImageSettings.DeleteFile(singerImage);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyPlayListApp.Data.DTO;
 using MyPlayListApp.Data.Entities;
@@ -44,6 +45,13 @@ namespace MyPlayListApp.Data.Services
         public ResultBase UpdateSong(SongDetailes song)
         {
             var result = new ResultBase();
+            var isExists = _songRepository.IsSongExists(song.Id);
+            if (!isExists)
+            {
+                result.Success = false;
+                result.Message = "Song Not Found.";
+                return result;
+            }
             var updatedSong = new Song()
             {
                 Id = song.Id,
@@ -56,7 +64,16 @@ namespace MyPlayListApp.Data.Services
         }
         public ResultBase DeleteSong(Guid songId)
         {
-            return _songRepository.DeleteSong(songId);
+            var result = new ResultBase();
+            var isExists = _songRepository.IsSongExists(songId);
+            if (!isExists)
+            {
+                result.Success = false;
+                result.Message = "Song Not Found.";
+                return result;
+            }
+            result = _songRepository.DeleteSong(songId);
+            return result;
         }
        
     }

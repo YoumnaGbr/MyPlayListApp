@@ -16,5 +16,6 @@ namespace MyPlayListApp.Data.Interfaces
         ResultBase UpdateSinger(Singer singer);
         ResultBase DeleteSinger(Guid singerId);
         bool IsSingerExists(Guid singerId);
+        bool HasSongs(Guid singerId);
     }
 }

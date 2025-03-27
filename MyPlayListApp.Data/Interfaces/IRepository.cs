@@ -11,12 +11,12 @@ namespace MyPlayListApp.Data.Interfaces
     {
      
         T Add(T entity);
-        void Delete(object id);
-        void Delete(Expression<Func<T, bool>> predicate);
-        IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
+        bool Delete(object id);
+        bool Delete(Expression<Func<T, bool>> predicate);
         T Update(T entity);
         T GetById(Guid id);
         List<T> GetAll();
+        bool Any(Expression<Func<T, bool>> predicate);
 
     }
 }

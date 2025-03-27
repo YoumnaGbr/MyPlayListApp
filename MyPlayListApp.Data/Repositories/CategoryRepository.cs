@@ -28,7 +28,6 @@ namespace MyPlayListApp.Data.Repositories
             try
             {
                 var addedcategory = Add(category);
-                _context.SaveChanges();
                 if (addedcategory != null)
                 {
                     result.Success = true;
@@ -48,21 +47,9 @@ namespace MyPlayListApp.Data.Repositories
             var result = new ResultBase();
             try
             {
-                var isExists = IsCategoryExists(categoryId);
-                if (!isExists)
+                var isDelelted = Delete(categoryId);
+                if (isDelelted)
                 {
-                    result.Success = false;
-                    result.Message = "Category Not Found.";
-                }
-                if (HasSongs(categoryId))
-                {
-                    result.Success = false;
-                    result.Message = "Cannot Delele Category Has Songs";
-                }
-                else
-                {
-                    Delete(categoryId);
-                    _context.SaveChanges();
                     result.Success = true;
                     result.Message = "Category Deleted Successfully.";
                 }
@@ -103,7 +90,7 @@ namespace MyPlayListApp.Data.Repositories
 
         public bool IsCategoryExists(Guid categoryId)
         {
-            var isExists = _context.Categories.Any(s => s.Id == categoryId);
+            var isExists = Any(s => s.Id == categoryId);
             return isExists;
         }
 
@@ -112,23 +99,12 @@ namespace MyPlayListApp.Data.Repositories
             var result = new ResultBase();
             try
             {
-               
-                var isExists = IsCategoryExists(category.Id);
-                if (!isExists)
+                var updatedCategory = Update(category);
+                if (updatedCategory != null)
                 {
-                    result.Success = false;
-                    result.Message = "Category Not Found.";
+                    result.Success = true;
+                    result.Message = "Category Updated Successfully.";
                 }
-                else
-                {
-                    var updatedCategory = Update(category);
-                    if (updatedCategory != null)
-                    {
-                        result.Success = true;
-                        result.Message = "Category Updated Successfully.";
-                    }
-                }
-
             }
             catch (Exception ex)
             {
@@ -139,8 +115,7 @@ namespace MyPlayListApp.Data.Repositories
         }
         public bool HasSongs(Guid categoryId)
         {
-            var hasSongs = _context.Categories.Where(s => s.Id == categoryId)
-                                           .Any(s => s.Songs.Any(m => m.CategoryId == categoryId));
+            var hasSongs = Any(c => c.Id == categoryId && c.Songs.Any(s => s.CategoryId == categoryId));
             return hasSongs;
         }
     }

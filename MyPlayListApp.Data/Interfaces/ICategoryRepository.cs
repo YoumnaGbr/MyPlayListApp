@@ -16,5 +16,6 @@ namespace MyPlayListApp.Data.Interfaces
         ResultBase UpdateCategory(Category category);
         ResultBase DeleteCategory(Guid categoryId);
         bool IsCategoryExists(Guid categoryId);
+        bool HasSongs(Guid categoryId);
     }
 }

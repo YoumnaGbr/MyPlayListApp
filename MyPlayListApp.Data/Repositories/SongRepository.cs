@@ -28,7 +28,6 @@ namespace MyPlayListApp.Data.Repositories
             try
             {
                 var addedsong = Add(song);
-                _context.SaveChanges();
                 if (addedsong != null)
                 {
                     result.Success = true;
@@ -49,16 +48,9 @@ namespace MyPlayListApp.Data.Repositories
             var result = new ResultBase();
             try
             {
-                var isExists = IsSongExists(songId);
-                if (!isExists)
+                var isDeleted = Delete(songId);
+                if (isDeleted)
                 {
-                    result.Success = false;
-                    result.Message = "Song Not Found.";
-                }
-                else
-                {
-                    Delete(songId);
-                    _context.SaveChanges();
                     result.Success = true;
                     result.Message = "Song Deleted Successfully.";
                 }
@@ -130,7 +122,7 @@ namespace MyPlayListApp.Data.Repositories
 
         public bool IsSongExists(Guid songId)
         {
-            var isExists = _context.Songs.Any(s => s.Id == songId);
+            var isExists = Any(s => s.Id == songId);
             return isExists;
         }
 
@@ -139,20 +131,11 @@ namespace MyPlayListApp.Data.Repositories
             var result = new ResultBase();
             try
             {
-                var isExists = IsSongExists(song.Id);
-                if (!isExists)
+                var updatedSong = Update(song);
+                if (updatedSong != null)
                 {
-                    result.Success = false;
-                    result.Message = "Song Not Found.";
-                }
-                else
-                {
-                    var updatedSong = Update(song);
-                    if (updatedSong != null)
-                    {
-                        result.Success = true;
-                        result.Message = "Song Updated Successfully.";
-                    }
+                    result.Success = true;
+                    result.Message = "Song Updated Successfully.";
                 }
             }
             catch (Exception ex)

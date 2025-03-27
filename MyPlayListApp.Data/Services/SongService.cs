@@ -23,7 +23,7 @@ namespace MyPlayListApp.Data.Services
             _songRepository = songRepository;
         }
       
-        public SongViewModel GetPlayList(SongsFilter filter)
+        public SongItemResult GetPlayList(SongsFilter filter)
         {
             return _songRepository.GetPlayList(filter);
         }

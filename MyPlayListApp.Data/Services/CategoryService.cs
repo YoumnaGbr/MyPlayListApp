@@ -20,7 +20,7 @@ namespace MyPlayListApp.Data.Services
             _categoryRepository = categoryRepository;
         }
 
-        public ResultBase AddNewCategory(CategoryDetailes category)
+        public ResultBase AddNewCategory(CategoryDTO category)
         {
             var addedCategory = new Category
             {
@@ -56,7 +56,7 @@ namespace MyPlayListApp.Data.Services
             return _categoryRepository.GetCategories(filter);
         }
 
-        public ResultBase UpdateCategory(CategoryDetailes category)
+        public ResultBase UpdateCategory(CategoryDTO category)
         {
             var result = new ResultBase();
 

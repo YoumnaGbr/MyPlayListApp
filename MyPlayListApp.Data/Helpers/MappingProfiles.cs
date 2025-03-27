@@ -13,7 +13,7 @@ namespace MyPlayListApp.Data.Helpers
     {
         public MappingProfiles()
         {
-            CreateMap<SingerDetailes,Singer>().ReverseMap();
+            CreateMap<SingerDTO,Singer>().ReverseMap();
         }
     }
 }

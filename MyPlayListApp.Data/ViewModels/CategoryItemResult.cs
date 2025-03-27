@@ -9,6 +9,6 @@ namespace MyPlayListApp.Data.ViewModels
 {
     public class CategoryItemResult : PagedResult
     {
-        public List<CategoryDetailes> Categories { get; set; }
+        public List<CategoryDTO> Categories { get; set; }
     }
 }

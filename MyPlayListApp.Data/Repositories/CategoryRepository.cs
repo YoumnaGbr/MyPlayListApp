@@ -79,7 +79,7 @@ namespace MyPlayListApp.Data.Repositories
             result.TotalCount = categories.Count();
             result.TotalPages = (int)Math.Ceiling((double)result.TotalCount / (double)filter.PageSize);
             categories = categories.Skip(filter.PageIndex * filter.PageSize).Take(filter.PageSize);
-            result.Categories = categories.Select(c => new CategoryDetailes()
+            result.Categories = categories.Select(c => new CategoryDTO()
             {
                 CategoryId = c.Id,
                 CategoryName = c.Name,

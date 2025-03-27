@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace MyPlayListApp.Data.ViewModels
 {
-    public class SingerDetailes
+    public class SingerDTO
     {
         public Guid Id { get; set; }
         [Required(ErrorMessage = "Singer name is required.")]

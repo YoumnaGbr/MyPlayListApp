@@ -12,8 +12,8 @@ namespace MyPlayListApp.Data.Interfaces
     public interface ICategoryService
     {
         CategoryItemResult GetCategories(CategoriesFilter filter);
-        ResultBase AddNewCategory(CategoryDetailes category);
-        ResultBase UpdateCategory(CategoryDetailes category);
+        ResultBase AddNewCategory(CategoryDTO category);
+        ResultBase UpdateCategory(CategoryDTO category);
         ResultBase DeleteCategory(Guid categoryId);
         List<Category> GetCategoriesList();
     }

@@ -35,7 +35,7 @@ namespace MyPlayListApp.Controllers
             {
                 return NotFound();
             }
-            var viewModel = new SingerDetailes
+            var viewModel = new SingerDTO
             {
                 Name = singer.Name,
                 Image = singer.Image,
@@ -58,7 +58,7 @@ namespace MyPlayListApp.Controllers
             var singers = _singerService.GetSingerList();
             var categories = _categoryService.GetCategoriesList();
 
-            var model = new SongViewModel
+            var model = new SongItemResult
             {
                 Filter = filter, 
                 songs = result.songs,
@@ -80,7 +80,7 @@ namespace MyPlayListApp.Controllers
             return View("Category", categories.Categories);
         }
         [HttpPost]
-        public IActionResult AddNewCategory(CategoryDetailes categoryDetailes)
+        public IActionResult AddNewCategory(CategoryDTO categoryDetailes)
         {
             var result = _categoryService.AddNewCategory(categoryDetailes);
             return Json(result);
@@ -117,7 +117,7 @@ namespace MyPlayListApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddNewSinger(SingerDetailes singerDetails)
+        public IActionResult AddNewSinger(SingerDTO singerDetails)
         {
             var result = _singerService.AddNewSinger(singerDetails);
             return Json(result);
@@ -143,7 +143,7 @@ namespace MyPlayListApp.Controllers
             return Json(result);
         }
         [HttpPost]
-        public IActionResult UpdateCategory([FromBody] CategoryDetailes categoryDetailes)
+        public IActionResult UpdateCategory([FromBody] CategoryDTO categoryDetailes)
         {
             var result = new ResultBase();
             if (string.IsNullOrWhiteSpace(categoryDetailes.CategoryName))
@@ -156,7 +156,7 @@ namespace MyPlayListApp.Controllers
             return Json(result);
         }
 
-        public IActionResult UpdateSinger(SingerDetailes singerDetails)
+        public IActionResult UpdateSinger(SingerDTO singerDetails)
         {
             var result = new ResultBase();
             if (string.IsNullOrWhiteSpace(singerDetails.Name))

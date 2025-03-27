@@ -9,7 +9,7 @@ using MyPlayListApp.Data.FilterModels;
 
 namespace MyPlayListApp.Data.ViewModels
 {
-    public class SongViewModel : PagedResult
+    public class SongItemResult : PagedResult
     {
         public SongsFilter Filter { get; set; }
         public List<SongDTO> songs { get; set; }

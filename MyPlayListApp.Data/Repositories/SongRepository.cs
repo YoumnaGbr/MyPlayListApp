@@ -63,10 +63,10 @@ namespace MyPlayListApp.Data.Repositories
             return result;
         }
 
-        public SongViewModel GetPlayList(SongsFilter filter) 
+        public SongItemResult GetPlayList(SongsFilter filter) 
         {
 
-            var result = new SongViewModel();
+            var result = new SongItemResult();
             var playlist = _context.Songs.Select(s => new
             {
                 SongId = s.Id,
@@ -109,7 +109,7 @@ namespace MyPlayListApp.Data.Repositories
                     SingerImage = s.singers.Image
                 }).ToList();
 
-            result = new SongViewModel
+            result = new SongItemResult
             {
                 songs = songs,
                 TotalCount = totalCount,

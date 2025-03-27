@@ -12,11 +12,11 @@ namespace MyPlayListApp.Data.Interfaces
     public interface ISingerService
     {
         SingerItemResult GetSingers(SingersFilter filter);
-        ResultBase AddNewSinger(SingerDetailes singer);
-        ResultBase UpdateSinger(SingerDetailes singer);
+        ResultBase AddNewSinger(SingerDTO singer);
+        ResultBase UpdateSinger(SingerDTO singer);
         ResultBase DeleteSinger(Guid singerId);
         List<Singer> GetSingerList();
-        SingerDetailes GetSingerDetailes(Guid singerId);
+        SingerDTO GetSingerDetailes(Guid singerId);
     }
 }
 

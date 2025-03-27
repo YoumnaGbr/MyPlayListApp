@@ -19,7 +19,7 @@ namespace MyPlayListApp.Data.DTO
         public string SingerImage { get; set; }
         public string TypeName { get; set; }
         public DateOnly SingerDateOfBirth { get; set; }
-        public List<SingerDetailes> singers {  get; set; }
-        public List<CategoryDetailes> categories { get; set; }
+        public List<SingerDTO> singers {  get; set; }
+        public List<CategoryDTO> categories { get; set; }
     }
 }

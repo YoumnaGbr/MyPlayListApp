@@ -41,7 +41,7 @@ namespace MyPlayListApp.Data.Repositories
             result.TotalCount = singers.Count();
             result.TotalPages = (int)Math.Ceiling((double)result.TotalCount / (double)filter.PageSize);
             singers = singers.Skip(filter.PageIndex * filter.PageSize).Take(filter.PageSize);
-            result.Singers = singers.Select( s => new SingerDetailes()
+            result.Singers = singers.Select( s => new SingerDTO()
             {
                 Id = s.Id,
                 Name = s.Name,

@@ -1,4 +1,4 @@
-﻿@model List<MyPlayListApp.Data.ViewModels.CategoryDetailes>
+﻿@model List<MyPlayListApp.Data.ViewModels.CategoryDTO>
 
 <div class="container my-2">
     <h2 class="text-center">Categories List</h2>
@@ -64,8 +64,8 @@
     }
 </div>
 
-<partial name="_AddCategory" model="new MyPlayListApp.Data.ViewModels.CategoryDetailes()" />
-<partial name="_EditCategory" model="new MyPlayListApp.Data.ViewModels.CategoryDetailes()" />
+<partial name="_AddCategory" model="new MyPlayListApp.Data.ViewModels.CategoryDTO()" />
+<partial name="_EditCategory" model="new MyPlayListApp.Data.ViewModels.CategoryDTO()" />
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

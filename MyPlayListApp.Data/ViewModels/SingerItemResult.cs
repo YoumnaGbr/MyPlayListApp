@@ -7,6 +7,6 @@ namespace MyPlayListApp.Data.ViewModels
 {
     public class SingerItemResult : PagedResult
     {
-        public List<SingerDetailes> Singers { get; set; }
+        public List<SingerDTO> Singers { get; set; }
     }
 }

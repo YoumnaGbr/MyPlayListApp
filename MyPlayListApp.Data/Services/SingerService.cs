@@ -27,7 +27,7 @@ namespace MyPlayListApp.Data.Services
             return _singerRepository.GetSingers(filter);
         }
        
-        public ResultBase AddNewSinger(SingerDetailes singer)
+        public ResultBase AddNewSinger(SingerDTO singer)
         {
             var result = new ResultBase();
             if (singer.ImageFile == null || ImageSettings.IsValidImage(singer.ImageFile) == false)
@@ -47,7 +47,7 @@ namespace MyPlayListApp.Data.Services
             result = _singerRepository.AddNewSinger(addedSinger);
             return result;
         }
-        public ResultBase UpdateSinger (SingerDetailes singer)
+        public ResultBase UpdateSinger (SingerDTO singer)
         {
             var result = new ResultBase();
             var isExists = _singerRepository.IsSingerExists(singer.Id);
@@ -109,10 +109,10 @@ namespace MyPlayListApp.Data.Services
         {
             return _singerRepository.GetAll();
         }
-        public SingerDetailes GetSingerDetailes(Guid singerId) 
+        public SingerDTO GetSingerDetailes(Guid singerId) 
         {
             var result = _singerRepository.GetById(singerId);
-            var singer = new SingerDetailes()
+            var singer = new SingerDTO()
             {
                 Name = result.Name,
                 Image = result.Image,
